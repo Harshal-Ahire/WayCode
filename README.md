@@ -148,20 +148,3 @@ waycode/
 
 All data is stored locally and private to your machine.
 
-
-## Author
-
-**Harshal Ahire**
-- GitHub: [@Harshal-Ahire](https://github.com/Harshal-Ahire)
-- Project: [WayCode](https://github.com/Harshal-Ahire/WayCode)
-
-
----
-
-
----
-
-
-├── examples/
-├── requirements.txt
-└── setup.py
