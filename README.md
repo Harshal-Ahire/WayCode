@@ -1,6 +1,6 @@
 # WayCode - AI-Powered Code Refactoring Agent
 
-An intelligent code refactoring assistant that learns your coding style using RAG (Retrieval-Augmented Generation) architecture with vector search and LLM integration.
+An intelligent CLI code refactoring assistant that learns your coding style using RAG (Retrieval-Augmented Generation) architecture with vector search and LLM integration.
 
 ## Features
 
