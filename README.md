@@ -161,9 +161,6 @@ All data is stored locally and private to your machine.
 - Google Gemini API key (free tier available)
 - 500MB disk space for vector embeddings
 
-## Contributing
-
-Contributions welcome! Please open an issue or submit a PR.
 
 ## License
 
@@ -181,8 +178,6 @@ MIT License - see [LICENSE](LICENSE) file for details.
 - ChromaDB for vector storage
 - Click framework for CLI interface
 ```
-
----
 
 ## **LICENSE (MIT)**
 ```
