@@ -1,0 +1,2 @@
+[console_scripts]
+waycode = waycode.cli:main

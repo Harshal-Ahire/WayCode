@@ -1,0 +1,122 @@
+Metadata-Version: 2.1
+Name: waycode
+Version: 1.0.0
+Summary: AI-Powered Code Refactoring Assistant with RAG
+Home-page: https://github.com/Harshal-Ahire/WayCode
+Author: Harshal Ahire
+Author-email: harshalahire@example.com
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Code Generators
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+
+# WayCode - AI-Powered Code Refactoring Assistant
+
+🚀 An intelligent code refactoring tool that learns your coding style using RAG (Retrieval-Augmented Generation) architecture.
+
+## Features
+
+- 🤖 **AI-Powered Refactoring** - Uses Google Gemini with web search for latest best practices
+- 🧠 **Learning Memory** - Remembers your coding patterns and style preferences
+- 📊 **Vector Database** - ChromaDB for semantic code search
+- 🔄 **Smart Context** - Retrieves relevant examples from your codebase
+- 💾 **Persistent Storage** - Keeps learning across sessions
+
+## Installation
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/waycode.git
+cd waycode
+
+# Install dependencies
+pip install -e .
+```
+
+## Setup
+
+1. Get a free Gemini API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
+
+2. Create a `.env` file in the root directory:
+```
+GEMINI_API_KEY=your_api_key_here
+```
+
+## Usage
+
+### Refactor a file
+```bash
+waycode refactor mycode.py
+```
+
+### Learn from your codebase
+```bash
+waycode index myproject/ -r
+```
+
+### Check learned patterns
+```bash
+waycode memory --show
+```
+
+### Reset memory
+```bash
+waycode memory --reset
+```
+
+## Examples
+
+**Before:**
+```python
+def getData():
+    import requests
+    x = requests.get('https://api.example.com/users')
+    return x.json()
+```
+
+**After:**
+```python
+import requests
+from typing import Dict, Optional
+
+def get_data() -> Optional[Dict]:
+    """Fetch user data from API."""
+    try:
+        response = requests.get('https://api.example.com/users')
+        response.raise_for_status()
+        return response.json()
+    except requests.RequestException as e:
+        print(f"Error fetching data: {e}")
+        return None
+```
+
+## Tech Stack
+
+- **Python 3.8+**
+- **Google Gemini API** - LLM with web search
+- **ChromaDB** - Vector database for embeddings
+- **Click** - CLI framework
+
+## Architecture
+
+- **RAG Pipeline**: Retrieves relevant context from vector DB before refactoring
+- **Memory System**: Learns coding patterns and preferences over time
+- **Context Builder**: Assembles personalized context for each refactoring
+
+## Contributing
+
+Contributions welcome! Feel free to open issues or submit PRs.
+
+## License
+
+MIT License - see LICENSE file for details
+
+## Author
+
+Your Name - [GitHub](https://github.com/Harshal-Ahire)
