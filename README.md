@@ -1,89 +1,167 @@
 # WayCode - AI-Powered Code Refactoring Agent
 
-<!--
-WayCode is an AI-powered code refactoring tool built to solve a real limitation of LLMs:
-large codebases exceed context windows, making refactoring unreliable.
+An intelligent code refactoring assistant that learns your coding style using RAG (Retrieval-Augmented Generation) architecture with vector search and LLM integration.
 
-This project uses Retrieval-Augmented Generation (RAG) with vector search
-to retrieve only the most relevant code context, enabling accurate multi-file refactoring
-while preserving coding style and improving performance.
--->
+## Features
 
-<!-- ===========================
-CORE FEATURES
-=========================== -->
+- **AI-Powered Refactoring** - Uses Google Gemini API with web search for latest best practices
+- **RAG Pipeline** - Vector search with ChromaDB to inject relevant code context into prompts
+- **Learning Memory** - Remembers your coding patterns and preferences across sessions
+- **Multi-Language Support** - Python, JavaScript, TypeScript, Java, Go, and more
+- **Performance Optimized** - Identifies and fixes O(N) to O(1) improvements
+- **Modern Standards** - Enforces PEP 8, type hints, error handling, and clean code principles
 
-<!--
-- Uses Google Gemini as the LLM for refactoring decisions
-- RAG pipeline with ChromaDB to retrieve relevant code context
-- Learns user coding patterns across runs (style memory)
-- Optimizes performance issues such as O(N) → O(1)
-- Enforces clean code standards (PEP 8, typing, error handling)
-- Supports multiple languages (Python, JS, TS, Java, Go)
--->
+## Tech Stack
 
-<!-- ===========================
-ARCHITECTURE
-=========================== -->
+- **Backend**: Python, FastAPI
+- **AI/ML**: Google Gemini API, RAG Architecture
+- **Vector Database**: ChromaDB with semantic embeddings
+- **CLI**: Click framework
+- **Async Processing**: Concurrent session handling with parallel LLM calls
 
-```text
-User Code → Vector Search → Context Retrieval → LLM → Refactored Code
+## Architecture
+```
+User Code → Vector Search → Context Retrieval → LLM Prompt → Refactored Code
                 ↓
-          Persistent Style Memory
+          Memory Storage (learns patterns)
+```
 
-# Refactor a single file
+The RAG pipeline enables accurate multi-file refactoring beyond standard context window limits by retrieving relevant code examples from your project history.
+
+## Installation
+```bash
+git clone https://github.com/Harshal-Ahire/WayCode.git
+cd WayCode
+pip install -r requirements.txt
+```
+
+## Setup
+
+1. Get a free Gemini API key from [Google AI Studio](https://aistudio.google.com/apikey)
+
+2. Create `.env` file:
+```
+GEMINI_API_KEY=your_api_key_here
+```
+
+3. Install the package:
+```bash
+pip install -e .
+```
+
+## Usage
+
+### Refactor a file
+```bash
 python -m waycode.cli refactor mycode.py
+```
 
-# Index a project to build vector embeddings and learn style
+### Learn from your codebase
+```bash
 python -m waycode.cli index myproject/ -r
+```
 
-# Refactor with custom output path
+### Custom output location
+```bash
 python -m waycode.cli refactor app.py -o refactored_app.py
+```
 
-# BEFORE: no typing, no error handling, O(N) lookup
+## Example
 
+**Before:**
+```python
 def getData():
     import requests
-    x = requests.get("https://api.example.com/users")
+    x = requests.get('https://api.example.com/users')
     return x.json()
 
 def getUser(id):
     for user in users:
-        if user["id"] == id:
+        if user['id'] == id:
             return user
+```
 
-# AFTER: typed, defensive, clean, O(1) lookup
-
+**After:**
+```python
 import requests
 from typing import Optional, Dict
 
 def get_data() -> Optional[Dict]:
+    """Fetches user data from API."""
     try:
-        response = requests.get("https://api.example.com/users", timeout=5)
+        response = requests.get('https://api.example.com/users', timeout=5)
         response.raise_for_status()
         return response.json()
-    except requests.RequestException:
+    except requests.RequestException as e:
+        print(f"Error: {e}")
         return None
 
 def get_user(user_id: int) -> Optional[Dict]:
+    """Retrieves user by ID with O(1) lookup."""
     return users_dict.get(user_id)
+```
 
-<!-- =========================== WHAT THE AGENT FIXES =========================== --> <!-- - Naming consistency (PEP 8) - Missing type hints and docstrings - Error handling and edge cases - Performance bottlenecks - Code smells and anti-patterns - Import hygiene - Defensive programming issues --> <!-- =========================== HOW IT WORKS (INTERNALLY) =========================== --> <!-- 1. Analyze source code to detect issues and patterns 2. Convert code chunks into embeddings 3. Retrieve relevant context using vector similarity search 4. Inject context into the LLM prompt 5. Generate refactored, ready-to-use code 6. Store learned style preferences for future runs --> <!-- =========================== PROJECT STRUCTURE =========================== -->
+## What WayCode Fixes
 
+- Naming conventions (PEP 8 compliance)
+- Type hints and documentation
+- Error handling and edge cases
+- Performance issues (O(N) → O(1))
+- Code smells and anti-patterns
+- Modern syntax and best practices
+- Import organization
+- Defensive programming patterns
+
+## How It Works
+
+1. **Analysis** - Scans your code for issues and patterns
+2. **Context Retrieval** - Searches vector database for similar code examples
+3. **LLM Processing** - Gemini API generates refactored code with web search
+4. **Memory Storage** - Learns your preferences for future refactorings
+5. **Output** - Saves clean code with detailed explanations
+
+## Project Structure
+```
 waycode/
 ├── waycode/
-│   ├── cli.py              # CLI entry point
-│   ├── config.py           # Prompts and configuration
-│   ├── refactor_agent.py   # Core refactoring logic
-│   ├── rag/                # RAG components
+│   ├── cli.py              # Command-line interface
+│   ├── config.py           # Configuration and prompts
+│   ├── refactor_agent.py   # Main refactoring engine
+│   ├── rag/                # RAG pipeline components
 │   │   ├── vector_store.py
 │   │   ├── embeddings.py
 │   │   ├── memory_manager.py
 │   │   └── context_builder.py
-│   └── utils/
+│   └── utils/              # Utilities
 │       ├── code_analyzer.py
 │       └── diff_generator.py
 ├── examples/
 ├── requirements.txt
 └── setup.py
+```
 
+## Data Storage
+
+- Vector database: `~/.waycode/data/vector_db/`
+- Memory: `~/.waycode/data/project_memory.json`
+- History: `~/.waycode/data/refactor_history.json`
+
+All data is stored locally and private to your machine.
+
+
+## Author
+
+**Harshal Ahire**
+- GitHub: [@Harshal-Ahire](https://github.com/Harshal-Ahire)
+- Project: [WayCode](https://github.com/Harshal-Ahire/WayCode)
+
+
+---
+
+
+---
+
+
+├── examples/
+├── requirements.txt
+└── setup.py
