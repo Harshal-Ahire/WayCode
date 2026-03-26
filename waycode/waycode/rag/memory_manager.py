@@ -6,11 +6,13 @@ from waycode.config import PROJECT_MEMORY_PATH, REFACTOR_HISTORY_PATH
 
 class MemoryManager:
     def __init__(self):
+        # Initialize storage engines and load persistent data
         self.vector_store = VectorStore()
         self.project_memory = self._load_project_memory()
         self.refactor_history = self._load_refactor_history()
     
     def _load_project_memory(self):
+        # Load project-wide patterns and styles from JSON
         if os.path.exists(PROJECT_MEMORY_PATH):
             with open(PROJECT_MEMORY_PATH, 'r') as f:
                 return json.load(f)
@@ -22,22 +24,26 @@ class MemoryManager:
         }
     
     def _load_refactor_history(self):
+        # Load transformation history logs
         if os.path.exists(REFACTOR_HISTORY_PATH):
             with open(REFACTOR_HISTORY_PATH, 'r') as f:
                 return json.load(f)
         return []
     
     def _save_project_memory(self):
+        # Persist project patterns to disk
         os.makedirs(os.path.dirname(PROJECT_MEMORY_PATH), exist_ok=True)
         with open(PROJECT_MEMORY_PATH, 'w') as f:
             json.dump(self.project_memory, f, indent=2)
     
     def _save_refactor_history(self):
+        # Persist refactoring logs to disk
         os.makedirs(os.path.dirname(REFACTOR_HISTORY_PATH), exist_ok=True)
         with open(REFACTOR_HISTORY_PATH, 'w') as f:
             json.dump(self.refactor_history, f, indent=2)
     
     def index_file(self, filepath, code, language):
+        # Add file content to vector search and extract coding patterns
         metadata = {
             "filename": filepath,
             "language": language,
@@ -45,11 +51,10 @@ class MemoryManager:
         }
         
         self.vector_store.add_code_pattern(code, metadata)
-        
-        # Extract and store patterns
         self._extract_patterns(code, language)
     
     def store_refactoring(self, original, refactored, language, filename, changes):
+        # Log successful refactors to vector store and history file
         metadata = {
             "language": language,
             "filename": filename,
@@ -59,7 +64,6 @@ class MemoryManager:
         
         self.vector_store.add_refactoring(original, refactored, metadata)
         
-        # Add to history
         self.refactor_history.append({
             "filename": filename,
             "language": language,
@@ -70,25 +74,23 @@ class MemoryManager:
         self._save_refactor_history()
     
     def _extract_patterns(self, code, language):
-        # Simple pattern extraction
+        # Analyze code for preferred syntax and architectural patterns
         patterns = []
         
-        # Check for async/await
+        # Detect concurrency preferences
         if 'async' in code and 'await' in code:
             patterns.append("prefers_async_await")
         
-        # Check for functional vs class components (React)
-        if language == 'javascript' or language == 'typescript':
+        # Detect JS/TS specific component styles
+        if language in ('javascript', 'typescript'):
             if 'const ' in code and '=>' in code:
                 patterns.append("prefers_functional_components")
             if 'class ' in code and 'extends' in code:
                 patterns.append("uses_class_components")
+            if 'const ' in code or 'let ' in code:
+                patterns.append("modern_js_syntax")
         
-        # Check for const/let vs var
-        if 'const ' in code or 'let ' in code:
-            patterns.append("modern_js_syntax")
-        
-        # Store patterns
+        # Update project memory and vector style store
         for pattern in patterns:
             if pattern not in self.project_memory["common_patterns"]:
                 self.project_memory["common_patterns"].append(pattern)
@@ -100,13 +102,9 @@ class MemoryManager:
         self._save_project_memory()
     
     def get_relevant_context(self, code, language, n_results=3):
-        # Search for similar code patterns
+        # Retrieve cross-referenced context for RAG-based refactoring
         similar_code = self.vector_store.search_similar_code(code, n_results)
-        
-        # Search refactor history
         similar_refactors = self.vector_store.search_refactor_history(code, n_results)
-        
-        # Get style preferences
         styles = self.vector_store.search_style_patterns(code, n_results)
         
         return {
