@@ -1,13 +1,14 @@
 from setuptools import setup, find_packages
 
+# Load long description from README
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
     name="waycode",
     version="1.0.0",
-    author="Your Name",
-    author_email="your.email@example.com",
+    author="Harshal Pramod Ahire",
+    author_email="harshal.ahire@example.com",
     description="AI-Powered Code Refactoring Assistant with RAG",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -25,6 +26,7 @@ setup(
         "Programming Language :: Python :: 3.11",
     ],
     python_requires=">=3.8",
+    # Core dependencies for AI and vector storage
     install_requires=[
         "google-genai>=1.0.0",
         "python-dotenv>=1.0.0",
@@ -32,6 +34,7 @@ setup(
         "numpy>=1.24.0",
         "click>=8.1.0",
     ],
+    # CLI entry point
     entry_points={
         "console_scripts": [
             "waycode=waycode.cli:main",
