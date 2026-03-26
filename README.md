@@ -2,40 +2,40 @@
 
 WayCode is an AI-driven developer tool that performs **context-aware, multi-file code refactoring** using a Retrieval-Augmented Generation (RAG) pipeline.
 
-It is designed as an **AI-assisted workflow system**, embedding LLM capabilities into real developer workflows to improve code quality, performance, and maintainability.
+It is designed as an **AI-assisted development workflow**, embedding LLM capabilities directly into real coding environments to improve code quality, performance, and maintainability.
 
 ---
 
 ## Overview
 
-WayCode enables automated refactoring by combining:
-- Semantic code retrieval (vector search)  
+WayCode automates code refactoring by combining:
+- Semantic code retrieval using embeddings  
 - Context-aware LLM reasoning  
 - Persistent memory of project-specific patterns  
 
-The system operates beyond single-file limitations by dynamically retrieving relevant context across the codebase.
+The system overcomes LLM context limitations by dynamically retrieving relevant code across files.
 
 ---
 
-## Core Capabilities
+## Key Capabilities
 
 - **RAG-Based Refactoring Pipeline**  
-  Retrieves semantically relevant code snippets using embeddings and injects them into LLM prompts.
+  Retrieves relevant code context using vector search and injects it into LLM prompts.
 
 - **Multi-file Context Awareness**  
-  Handles cross-file dependencies by dynamically building context from related files.
+  Handles cross-file dependencies by dynamically constructing context.
 
 - **Learning Memory System**  
-  Stores and reuses project-specific coding patterns for consistent refactoring.
+  Stores project-specific patterns and reuses them for consistent refactoring.
 
-- **AI-Driven Workflow Integration**  
-  Functions as a CLI-based automation tool embedded directly into developer workflows.
+- **Workflow Integration (CLI)**  
+  Operates as a CLI tool embedded directly into developer workflows.
 
-- **Performance Optimization Engine**  
-  Identifies inefficiencies (e.g., O(N) → O(1)) and improves algorithmic performance.
+- **Performance Optimization**  
+  Identifies inefficient patterns and improves algorithmic complexity.
 
-- **Resilient LLM Interaction**  
-  Validates outputs and ensures syntactic correctness and safe transformations.
+- **Safe Code Transformation**  
+  Validates outputs to prevent syntax errors and unsafe changes.
 
 ---
 
@@ -52,32 +52,32 @@ User Code → Vector Search → Context Retrieval → LLM Prompt → Refactored 
 ## Advanced Engineering Details
 
 - **Chunking Strategy**  
-  Code is segmented at function/class level for semantically meaningful retrieval.
+  Code is segmented at function/class level to preserve semantic meaning.
 
 - **Context Ranking**  
-  Uses embedding similarity (cosine distance) to rank relevant snippets.
+  Uses embedding similarity (cosine distance) to prioritize relevant snippets.
 
 - **Dynamic Context Injection**  
-  Builds prompts using multi-file context to overcome LLM token limitations.
+  Builds prompts from multi-file context to overcome token limitations.
 
 - **Prompt Structuring**  
-  Enforces consistent output format and coding standards.
+  Enforces consistency, coding standards, and safe outputs.
 
 - **Scalable Design**  
-  Handles large codebases through retrieval rather than full-context processing.
+  Handles large repositories using retrieval instead of full-context processing.
 
 ---
 
 ## Engineering Highlights
 
-- **RAG System in Production Workflow**  
-  Applies retrieval-based AI reasoning to real developer tasks.
+- **RAG Applied to Developer Workflows**  
+  Integrates retrieval-based AI reasoning into real coding tasks.
 
 - **AI + Systems Integration**  
-  Combines vector databases, LLMs, and CLI workflows into a unified system.
+  Combines vector databases, LLMs, and CLI tooling into a unified system.
 
-- **Workflow Automation**  
-  Automates repetitive developer tasks while preserving code correctness.
+- **Automation of Repetitive Tasks**  
+  Reduces manual effort in refactoring while maintaining correctness.
 
 ---
 
@@ -85,9 +85,62 @@ User Code → Vector Search → Context Retrieval → LLM Prompt → Refactored 
 
 - **Backend**: Python, FastAPI  
 - **AI/ML**: Google Gemini API  
-- **Vector DB**: ChromaDB  
+- **Vector Database**: ChromaDB  
 - **CLI**: Click  
 - **Concurrency**: Async processing  
+
+---
+
+## Usage
+
+### Refactor a file
+
+```bash
+python -m waycode.cli refactor mycode.py
+```
+
+### Index a codebase
+
+```bash
+python -m waycode.cli index myproject/ -r
+```
+
+---
+
+## Example
+
+**Before:**
+```python
+def getData():
+    import requests
+    x = requests.get('https://api.example.com/users')
+    return x.json()
+
+def getUser(id):
+    for user in users:
+        if user['id'] == id:
+            return user
+```
+
+**After:**
+```python
+import requests
+from typing import Optional, Dict
+
+def get_data() -> Optional[Dict]:
+    """Fetches user data from API."""
+    try:
+        response = requests.get('https://api.example.com/users', timeout=5)
+        response.raise_for_status()
+        return response.json()
+    except requests.RequestException as e:
+        print(f"Error: {e}")
+        return None
+
+def get_user(user_id: int) -> Optional[Dict]:
+    """Retrieves user by ID with O(1) lookup."""
+    return users_dict.get(user_id)
+```
 
 ---
 
@@ -95,8 +148,8 @@ User Code → Vector Search → Context Retrieval → LLM Prompt → Refactored 
 
 - Modular agent architecture for LLM orchestration  
 - Dedicated retrieval components (retriever, ranker)  
-- Externalized prompt management  
-- Test suite for validation and robustness  
+- Externalized prompt templates  
+- Test suite for validation and reliability  
 
 ---
 
@@ -105,3 +158,12 @@ User Code → Vector Search → Context Retrieval → LLM Prompt → Refactored 
 - Vector DB: `~/.waycode/data/vector_db/`  
 - Memory: `~/.waycode/data/project_memory.json`  
 - History: `~/.waycode/data/refactor_history.json`  
+
+---
+
+## Design Philosophy
+
+WayCode focuses on:
+- Practical developer productivity improvements  
+- Maintainability and correctness  
+- Scalable AI-assisted workflows  
