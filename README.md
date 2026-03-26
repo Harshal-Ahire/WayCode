@@ -166,58 +166,30 @@ def get_user(user_id: int) -> Optional[Dict]:
 ```bash
 waycode/
 ├── waycode/
-│   ├── cli.py                      # Command-line interface
-│
-│   ├── agents/                    # Core AI agents
-│   │   ├── refactor_agent.py      # Orchestrates refactoring workflow
-│   │   ├── prompt_builder.py      # Constructs structured LLM prompts
-│   │   └── response_parser.py     # Validates and parses LLM outputs
-│
-│   ├── retrieval/                 # RAG pipeline (context retrieval)
-│   │   ├── vector_store.py        # ChromaDB interactions
-│   │   ├── embeddings.py          # Embedding generation
-│   │   ├── retriever.py           # Fetches relevant code snippets
-│   │   ├── ranker.py              # Ranks context using similarity
-│   │   └── context_builder.py     # Builds final prompt context
-│
-│   ├── services/                  # Business logic layer
-│   │   └── refactor_service.py    # High-level refactoring orchestration
-│
-│   ├── memory/                    # Learning system
-│   │   └── memory_manager.py      # Stores and retrieves coding patterns
-│
-│   ├── prompts/                   # Prompt templates
-│   │   ├── refactor_prompt.txt
-│   │   └── system_prompt.txt
-│
-│   ├── utils/                     # Utility modules
-│   │   ├── code_analyzer.py
-│   │   └── diff_generator.py
-│
-│   └── config.py                  # Configuration and global settings
-│
-├── tests/                         # Unit and integration tests
-├── examples/                      # Sample inputs and outputs
+│   ├── cli.py              # Command-line interface
+│   ├── config.py           # Configuration and prompts
+│   ├── refactor_agent.py   # Main refactoring engine
+│   ├── rag/                # RAG pipeline components
+│   │   ├── vector_store.py
+│   │   ├── embeddings.py
+│   │   ├── memory_manager.py
+│   │   └── context_builder.py
+│   └── utils/              # Utilities
+│       ├── code_analyzer.py
+│       └── diff_generator.py
+├── examples/
 ├── requirements.txt
 └── setup.py
 ```
-
 ---
 
-## Architecture Overview
+## Planned Architecture Improvements
 
-WayCode follows a layered architecture to ensure modularity, scalability, and maintainability:
-
-- **CLI Layer** → Handles user interaction and command parsing  
-- **Service Layer** → Orchestrates refactoring workflows  
-- **Agent Layer** → Manages LLM interaction and prompt lifecycle  
-- **Retrieval Layer (RAG)** → Fetches and ranks relevant code context  
-- **Memory Layer** → Stores and reuses learned coding patterns  
-
-This separation enables:
-- Easier testing and extensibility  
-- Clear boundaries between AI logic and application logic  
-- Scalable handling of large, multi-file codebases  
+- Introduce modular agent layer for better LLM orchestration  
+- Separate retrieval pipeline into dedicated components (retriever, ranker)  
+- Add service layer for clearer business logic separation  
+- Externalize prompt templates for better maintainability  
+- Add test suite for validation and reliability  
 
 ---
 
