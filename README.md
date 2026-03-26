@@ -122,8 +122,6 @@ def get_user(user_id: int) -> Optional[Dict]:
 
 ## Project Structure
 
-## Project Structure
-
 ```bash
 waycode/
 ├── waycode/
