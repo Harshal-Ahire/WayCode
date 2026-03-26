@@ -1,29 +1,41 @@
-# WayCode - AI-Powered Code Refactoring Agent
+# WayCode — AI-Powered Code Refactoring System
 
-An intelligent CLI-based code refactoring assistant that learns your coding style using a Retrieval-Augmented Generation (RAG) pipeline with vector search and LLM integration.
+WayCode is an AI-driven developer tool that performs **context-aware, multi-file code refactoring** using a Retrieval-Augmented Generation (RAG) pipeline.
 
-WayCode goes beyond simple formatting by performing **context-aware, multi-file refactoring**, improving code quality, structure, and performance while adapting to your project-specific patterns.
-
----
-
-## Features
-
-- **AI-Powered Refactoring** – Uses Google Gemini API with web search to apply up-to-date best practices  
-- **RAG Pipeline** – Retrieves semantically relevant code context using ChromaDB to guide refactoring  
-- **Learning Memory** – Adapts to your coding style and project patterns across sessions  
-- **Multi-Language Support** – Python, JavaScript, TypeScript, Java, Go, and more  
-- **Performance Optimization** – Detects and improves inefficient patterns (e.g., O(N) → O(1))  
-- **Modern Standards** – Enforces PEP 8, type hints, error handling, and clean architecture principles  
+It is designed as an **AI-assisted workflow system**, embedding LLM capabilities into real developer workflows to improve code quality, performance, and maintainability.
 
 ---
 
-## Tech Stack
+## Overview
 
-- **Backend**: Python, FastAPI  
-- **AI/ML**: Google Gemini API, RAG Architecture  
-- **Vector Database**: ChromaDB (semantic embeddings)  
-- **CLI**: Click framework  
-- **Concurrency**: Async processing with parallel LLM calls  
+WayCode enables automated refactoring by combining:
+- Semantic code retrieval (vector search)  
+- Context-aware LLM reasoning  
+- Persistent memory of project-specific patterns  
+
+The system operates beyond single-file limitations by dynamically retrieving relevant context across the codebase.
+
+---
+
+## Core Capabilities
+
+- **RAG-Based Refactoring Pipeline**  
+  Retrieves semantically relevant code snippets using embeddings and injects them into LLM prompts.
+
+- **Multi-file Context Awareness**  
+  Handles cross-file dependencies by dynamically building context from related files.
+
+- **Learning Memory System**  
+  Stores and reuses project-specific coding patterns for consistent refactoring.
+
+- **AI-Driven Workflow Integration**  
+  Functions as a CLI-based automation tool embedded directly into developer workflows.
+
+- **Performance Optimization Engine**  
+  Identifies inefficiencies (e.g., O(N) → O(1)) and improves algorithmic performance.
+
+- **Resilient LLM Interaction**  
+  Validates outputs and ensures syntactic correctness and safe transformations.
 
 ---
 
@@ -32,185 +44,64 @@ WayCode goes beyond simple formatting by performing **context-aware, multi-file 
 ```
 User Code → Vector Search → Context Retrieval → LLM Prompt → Refactored Code
                 ↓
-          Memory Storage (pattern learning)
-```
-
-The RAG pipeline enables **accurate multi-file refactoring beyond context window limits** by retrieving relevant code examples and patterns from indexed project history.
-
----
-
-## Advanced Details
-
-- **Chunking Strategy**: Code is segmented at function/class level to preserve semantic meaning  
-- **Context Ranking**: Retrieved snippets are ranked via embedding similarity (cosine distance)  
-- **Multi-file Awareness**: Dynamically injects relevant files to handle cross-file dependencies  
-- **Prompt Engineering**: Structured prompts enforce consistency, safety, and best practices  
-- **Failure Handling**: Responses are validated to prevent syntax errors and unsafe transformations  
-- **Learning Memory**: Stores project-specific patterns and reuses them for consistent refactoring  
-- **Scalability**: Designed to handle large codebases through retrieval instead of full-context loading  
-
----
-
-## Installation
-
-```bash
-git clone https://github.com/Harshal-Ahire/WayCode.git
-cd WayCode
-pip install -r requirements.txt
+          Memory Storage
 ```
 
 ---
 
-## Setup
+## Advanced Engineering Details
 
-1. Get a free Gemini API key from: https://aistudio.google.com/apikey  
+- **Chunking Strategy**  
+  Code is segmented at function/class level for semantically meaningful retrieval.
 
-2. Create a `.env` file:
+- **Context Ranking**  
+  Uses embedding similarity (cosine distance) to rank relevant snippets.
 
-```env
-GEMINI_API_KEY=your_api_key_here
-```
+- **Dynamic Context Injection**  
+  Builds prompts using multi-file context to overcome LLM token limitations.
 
-3. Install the package:
+- **Prompt Structuring**  
+  Enforces consistent output format and coding standards.
 
-```bash
-pip install -e .
-```
-
----
-
-## Usage
-
-### Refactor a file
-
-```bash
-python -m waycode.cli refactor mycode.py
-```
-
-### Learn from your codebase
-
-```bash
-python -m waycode.cli index myproject/ -r
-```
-
-### Custom output location
-
-```bash
-python -m waycode.cli refactor app.py -o refactored_app.py
-```
+- **Scalable Design**  
+  Handles large codebases through retrieval rather than full-context processing.
 
 ---
 
-## Example
+## Engineering Highlights
 
-**Before:**
-```python
-def getData():
-    import requests
-    x = requests.get('https://api.example.com/users')
-    return x.json()
+- **RAG System in Production Workflow**  
+  Applies retrieval-based AI reasoning to real developer tasks.
 
-def getUser(id):
-    for user in users:
-        if user['id'] == id:
-            return user
-```
+- **AI + Systems Integration**  
+  Combines vector databases, LLMs, and CLI workflows into a unified system.
 
-**After:**
-```python
-import requests
-from typing import Optional, Dict
-
-def get_data() -> Optional[Dict]:
-    """Fetches user data from API."""
-    try:
-        response = requests.get('https://api.example.com/users', timeout=5)
-        response.raise_for_status()
-        return response.json()
-    except requests.RequestException as e:
-        print(f"Error: {e}")
-        return None
-
-def get_user(user_id: int) -> Optional[Dict]:
-    """Retrieves user by ID with O(1) lookup."""
-    return users_dict.get(user_id)
-```
+- **Workflow Automation**  
+  Automates repetitive developer tasks while preserving code correctness.
 
 ---
 
-## What WayCode Fixes
+## Tech Stack
 
-- Naming conventions (PEP 8 compliance)  
-- Type hints and documentation  
-- Error handling and edge cases  
-- Performance issues (O(N) → O(1))  
-- Code smells and anti-patterns  
-- Modern syntax and best practices  
-- Import organization  
-- Defensive programming patterns  
+- **Backend**: Python, FastAPI  
+- **AI/ML**: Google Gemini API  
+- **Vector DB**: ChromaDB  
+- **CLI**: Click  
+- **Concurrency**: Async processing  
 
 ---
 
-## How It Works
+## Planned Improvements
 
-1. **Analysis** – Scans code to detect patterns, inefficiencies, and anti-patterns  
-2. **Context Retrieval** – Fetches relevant examples from the vector database  
-3. **LLM Processing** – Generates refactored code using Gemini with enriched context  
-4. **Memory Storage** – Stores useful patterns for future reuse  
-5. **Output Generation** – Produces clean, optimized code with improvements applied  
-
----
-
-## Project Structure
-
-```bash
-waycode/
-├── waycode/
-│   ├── cli.py              # Command-line interface
-│   ├── config.py           # Configuration and prompts
-│   ├── refactor_agent.py   # Main refactoring engine
-│   ├── rag/                # RAG pipeline components
-│   │   ├── vector_store.py
-│   │   ├── embeddings.py
-│   │   ├── memory_manager.py
-│   │   └── context_builder.py
-│   └── utils/              # Utilities
-│       ├── code_analyzer.py
-│       └── diff_generator.py
-├── examples/
-├── requirements.txt
-└── setup.py
-```
----
-
-## Planned Architecture Improvements
-
-- Introduce modular agent layer for better LLM orchestration  
-- Separate retrieval pipeline into dedicated components (retriever, ranker)  
-- Add service layer for clearer business logic separation  
-- Externalize prompt templates for better maintainability  
-- Add test suite for validation and reliability  
+- Modular agent architecture for LLM orchestration  
+- Dedicated retrieval components (retriever, ranker)  
+- Externalized prompt management  
+- Test suite for validation and robustness  
 
 ---
 
 ## Data Storage
 
-- **Vector Database**: `~/.waycode/data/vector_db/`  
-- **Memory Store**: `~/.waycode/data/project_memory.json`  
-- **History**: `~/.waycode/data/refactor_history.json`  
-
-All data is stored locally and remains private to your machine.
-
----
-
-## Notes
-
-WayCode is designed as a **developer-first AI tool**, focusing on:
-- Practical code quality improvements  
-- Maintainability and readability  
-- Scalable AI-assisted workflows  
-
-Future improvements may include:
-- Automated evaluation benchmarks  
-- IDE integrations  
-- Fine-tuned models for code-specific tasks  
+- Vector DB: `~/.waycode/data/vector_db/`  
+- Memory: `~/.waycode/data/project_memory.json`  
+- History: `~/.waycode/data/refactor_history.json`  
