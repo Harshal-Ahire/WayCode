@@ -68,8 +68,8 @@ python -m waycode.cli refactor app.py -o refactored_app.py
 
 ## Example
 
-*Before:*
-python
+**Before:**
+```python
 def getData():
     import requests
     x = requests.get('https://api.example.com/users')
@@ -79,10 +79,10 @@ def getUser(id):
     for user in users:
         if user['id'] == id:
             return user
+```
 
-
-*After:*
-python
+**After:**
+```python
 import requests
 from typing import Optional, Dict
 
@@ -99,7 +99,7 @@ def get_data() -> Optional[Dict]:
 def get_user(user_id: int) -> Optional[Dict]:
     """Retrieves user by ID with O(1) lookup."""
     return users_dict.get(user_id)
-
+```
 
 ## What WayCode Fixes
 
