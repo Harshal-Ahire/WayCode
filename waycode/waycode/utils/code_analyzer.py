@@ -2,6 +2,7 @@ import os
 
 class CodeAnalyzer:
     def __init__(self):
+        # Map of file extensions to their respective languages
         self.language_extensions = {
             '.py': 'python',
             '.js': 'javascript',
@@ -26,11 +27,12 @@ class CodeAnalyzer:
         }
     
     def detect_language(self, filepath):
+        # Identify language based on file extension
         _, ext = os.path.splitext(filepath)
         return self.language_extensions.get(ext.lower(), 'unknown')
     
     def analyze_complexity(self, code):
-        # Simple complexity metrics
+        # Generate basic code complexity metrics
         lines = code.split('\n')
         non_empty_lines = [l for l in lines if l.strip()]
         
@@ -44,14 +46,15 @@ class CodeAnalyzer:
         return metrics
     
     def _calculate_nesting(self, code):
+        # Calculate deepest level of brace or parenthesis nesting
         max_nesting = 0
         current_nesting = 0
         
         for char in code:
-            if char == '{' or char == '(':
+            if char in ('{', '('):
                 current_nesting += 1
                 max_nesting = max(max_nesting, current_nesting)
-            elif char == '}' or char == ')':
+            elif char in ('}', ')'):
                 current_nesting = max(0, current_nesting - 1)
         
         return max_nesting
