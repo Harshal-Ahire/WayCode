@@ -20,38 +20,35 @@ class RefactorAgent:
     def refactor_code(self, code, language, filename=None):
         print("Analyzing code...")
         
-        # Get relevant context from memory
+        # Retrieve context from vector memory
         context = self.context_builder.build_context(code, language)
         
-        # Build prompt with memory context
+        # Prepare prompt with RAG context
         prompt = REFACTOR_PROMPT.format(
             memory_context=context,
             language=language,
             code=code
         )
         
-        # IMPORTANT: Google Search tool removed to avoid quota 'limit: 0' errors
         print("Generating refactor using AI model...")
         
+        # model generation without search tool to avoid quota issues
         response = self.client.models.generate_content(
             model=GEMINI_MODEL,
             contents=prompt,
             config=types.GenerateContentConfig(
                 temperature=TEMPERATURE
-                # tools=[types.Tool(google_search=types.GoogleSearch())]  <-- REMOVED
             )
         )
         
         result = response.text
-        
-        # Parse response
         refactored = self._parse_refactored_code(result)
         
         if refactored:
-            # Generate diff
+            # Calculate code changes
             diff = self.diff_gen.generate_diff(code, refactored['code'])
             
-            # Store in memory for learning
+            # Store operation in memory for future reference
             self.memory.store_refactoring(
                 original=code,
                 refactored=refactored['code'],
@@ -81,7 +78,7 @@ class RefactorAgent:
             return None
     
     def _parse_refactored_code(self, response):
-        # Extract code blocks from markdown
+        # Extract code and explanation sections from model response
         lines = response.split('\n')
         in_code = False
         code_lines = []
@@ -112,14 +109,13 @@ class RefactorAgent:
         return None
     
     def analyze_project_file(self, filepath):
+        # Index file content for knowledge base
         print(f"Learning from {filepath}...")
         
         with open(filepath, 'r', encoding='utf-8') as f:
             code = f.read()
         
         language = self.analyzer.detect_language(filepath)
-        
-        # Store file in vector DB for future context
         self.memory.index_file(filepath, code, language)
         
         print(f"Indexed {filepath}")
@@ -133,22 +129,21 @@ def main():
     agent = RefactorAgent()
     
     if sys.argv[1] == '--index':
-        # Index mode: learn from codebase
+        # indexing mode
         filepath = sys.argv[2]
         agent.analyze_project_file(filepath)
     else:
-        # Refactor mode
+        # refactor mode
         filepath = sys.argv[1]
         
         with open(filepath, 'r', encoding='utf-8') as f:
             code = f.read()
         
         language = agent.analyzer.detect_language(filepath)
-        
         refactored = agent.refactor_code(code, language, filepath)
         
         if refactored:
-            # Save refactored code
+            # write output to file
             output_path = f"./output/{os.path.basename(filepath)}"
             os.makedirs('./output', exist_ok=True)
             
