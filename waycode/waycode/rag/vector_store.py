@@ -4,20 +4,19 @@ import os
 
 class VectorStore:
     def __init__(self):
-        # Fix: Only create directory if it doesn't exist
+        # Create persistent storage directory if missing
         if not os.path.exists(VECTOR_DB_PATH):
             os.makedirs(VECTOR_DB_PATH, exist_ok=True)
         
-        self.client = chromadb.PersistentClient(
-            path=VECTOR_DB_PATH
-        )
+        self.client = chromadb.PersistentClient(path=VECTOR_DB_PATH)
         
-        # Collections for different types of memory
+        # Initialize specialized memory collections
         self.code_collection = self._get_or_create_collection("code_patterns")
         self.refactor_collection = self._get_or_create_collection("refactor_history")
         self.style_collection = self._get_or_create_collection("style_preferences")
     
     def _get_or_create_collection(self, name):
+        # Helper to retrieve or initialize a ChromaDB collection
         try:
             return self.client.get_collection(name)
         except:
@@ -27,6 +26,7 @@ class VectorStore:
             )
     
     def add_code_pattern(self, code, metadata):
+        # Index raw code patterns with metadata
         self.code_collection.add(
             documents=[code],
             metadatas=[metadata],
@@ -34,6 +34,7 @@ class VectorStore:
         )
     
     def add_refactoring(self, original, refactored, metadata):
+        # Store transformation history for future learning
         doc = f"Original:\n{original}\n\nRefactored:\n{refactored}"
         self.refactor_collection.add(
             documents=[doc],
@@ -42,6 +43,7 @@ class VectorStore:
         )
     
     def add_style_preference(self, pattern, metadata):
+        # Index specific naming or architectural style preferences
         self.style_collection.add(
             documents=[pattern],
             metadatas=[metadata],
@@ -49,29 +51,29 @@ class VectorStore:
         )
     
     def search_similar_code(self, query, n_results=3):
-        results = self.code_collection.query(
+        # Query existing codebase patterns
+        return self.code_collection.query(
             query_texts=[query],
             n_results=n_results
         )
-        return results
     
     def search_refactor_history(self, query, n_results=3):
-        results = self.refactor_collection.query(
+        # Query past refactoring transformations
+        return self.refactor_collection.query(
             query_texts=[query],
             n_results=n_results
         )
-        return results
     
     def search_style_patterns(self, query, n_results=3):
-        results = self.style_collection.query(
+        # Query style conventions for consistency
+        return self.style_collection.query(
             query_texts=[query],
             n_results=n_results
         )
-        return results
     
     def get_all_styles(self):
+        # Retrieve all stored style preferences
         try:
-            results = self.style_collection.get()
-            return results
+            return self.style_collection.get()
         except:
             return None
