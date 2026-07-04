@@ -40,7 +40,6 @@ graph TD
     H --> I[Final Refactored Output]
     F <--> J[Persistent Memory System]
     D <--> J
-
 Core Components
 
 Indexing Engine: Intelligent chunking at function/class level to preserve semantic meaning
