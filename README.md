@@ -41,10 +41,9 @@ graph TD
     F <--> J[Persistent Memory System]
     D <--> J
 
+Core Components
 
-    Core Components
-
-Indexing Engine: Intelligent chunking at function/class level
+Indexing Engine: Intelligent chunking at function/class level to preserve semantic meaning
 Retrieval System: Cosine similarity-based ranking with dynamic context injection
 Agent Orchestrator: LangGraph-based multi-step planning and tool calling
 Memory Layer: Persistent storage of project knowledge and refactoring history
