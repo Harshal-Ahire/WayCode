@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🧭 WayCode — Code Intelligence Platform
+# WayCode — Code Intelligence Platform
 
 **A backend service that indexes and understands large codebases — enabling fast semantic search and AI-assisted code generation across repositories.**
 
@@ -48,12 +48,12 @@ On top of that index sits a modular retrieval pipeline that powers repository se
 
 | Capability | Description |
 |---|---|
-| 🌳 **Multi-Language AST Parsing** | Parses and indexes Python, JavaScript, and TypeScript repositories at the syntax-tree level |
-| ⚡ **Incremental Indexing** | Re-indexes only changed files/functions instead of the full repo, cutting reprocessing time by 70% |
-| 🔍 **Modular Retrieval Pipeline** | ChromaDB-backed vector search with metadata filtering for precise, context-aware code retrieval |
-| 🛠️ **Integrated Code Tools** | Tooling for repository search and code generation, designed for agentic workflows |
-| 🧵 **Asynchronous Indexing Workers** | Background workers process large repositories without blocking API requests |
-| 🐳 **Containerized & CI-Tested** | Dockerized with Docker Compose; GitHub Actions CI runs integration tests on every change |
+| **Multi-Language AST Parsing** | Parses and indexes Python, JavaScript, and TypeScript repositories at the syntax-tree level |
+| **Incremental Indexing** | Re-indexes only changed files/functions instead of the full repo, cutting reprocessing time by 70% |
+| **Modular Retrieval Pipeline** | ChromaDB-backed vector search with metadata filtering for precise, context-aware code retrieval |
+| **Integrated Code Tools** | Tooling for repository search and code generation, designed for agentic workflows |
+| **Asynchronous Indexing Workers** | Background workers process large repositories without blocking API requests |
+| **Containerized & CI-Tested** | Dockerized with Docker Compose; GitHub Actions CI runs integration tests on every change |
 
 ---
 
@@ -98,10 +98,10 @@ Indexing and retrieval are decoupled: async workers handle the (potentially heav
 
 ## Performance Impact
 
-- ⚡ **70% reduction** in reprocessing time via incremental indexing
-- 🔍 Precise retrieval through combined vector similarity + metadata filtering
-- 🧵 Non-blocking indexing under asynchronous workers
-- ✅ Continuous validation via automated integration tests in CI
+- **70% reduction** in reprocessing time via incremental indexing
+- Precise retrieval through combined vector similarity + metadata filtering
+- Non-blocking indexing under asynchronous workers
+- Continuous validation via automated integration tests in CI
 
 ---
 
@@ -176,7 +176,6 @@ waycode/
 └── README.md
 ```
 
-> Update this tree to match your actual repo layout.
 
 ---
 
