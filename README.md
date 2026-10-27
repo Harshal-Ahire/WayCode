@@ -1,3 +1,4 @@
+
 <div align="center">
 
 # WayCode — Semantic Code Search Engine & MCP Tool (RAG)
@@ -29,6 +30,7 @@
 - [Performance & Benchmark Impact](#performance--benchmark-impact)
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
+- [Example Usage](#example-usage)
 - [Project Structure](#project-structure)
 - [Roadmap](#roadmap)
 - [License](#license)
@@ -71,16 +73,181 @@ WayCode features an **incremental indexing engine** that re-indexes only modifie
 │ AI LLM Client / │ ◀── │  MCP Tool Schema │ ◀── │ FastAPI REST Engine │ ◀── │ Semantic Query   │
 │ Cursor / Claude │     │  Integration     │     │ (180ms Latency)     │     │ Vector Search    │
 └─────────────────┘     └──────────────────┘     └─────────────────────┘     └──────────────────┘
+```
 
+---
 
-AST Chunking & Retrieval Pipeline
-Selective File Detection — Scans target repos and filters out untouched files to re-index only changed code modules.
+## AST Chunking & Retrieval Pipeline
 
-AST Syntax Tree Parsing — Parses code via Python Abstract Syntax Trees (AST), extracting whole function blocks, docstrings, and class structures instead of arbitrary text splits.
+1. **Selective File Detection** — Scans target repositories and filters out untouched files to re-index only changed code modules.
 
-Vector Embedding & Indexing — Generates dense vector representations stored in ChromaDB alongside rich metadata (function name, start/end lines, dependencies).
+2. **AST Syntax Tree Parsing** — Parses code via Python Abstract Syntax Trees (AST), extracting whole function blocks, docstrings, and class structures instead of arbitrary text splits.
 
-Semantic Retrieval & MCP Tool Serving — Exposes /search and /query endpoints alongside Model Context Protocol (MCP) schemas for autonomous agent integration.
+3. **Vector Embedding & Indexing** — Generates dense vector representations stored in ChromaDB alongside rich metadata, including function name, start/end lines, and dependencies.
 
-MCP Integration
-WayCode implements standard Model Context Protocol (MCP) tool schemas. Any MCP-compatible LLM agent can dynamically inspect the repository index:
+4. **Semantic Retrieval & MCP Tool Serving** — Exposes `/search` and `/query` endpoints alongside Model Context Protocol (MCP) schemas for autonomous agent integration.
+
+---
+
+## MCP Integration
+
+WayCode implements standard Model Context Protocol (MCP) tool schemas. Any MCP-compatible LLM agent can dynamically inspect the repository index.
+
+### Example MCP Tool Schema
+
+```json
+{
+  "name": "search_codebase",
+  "description": "Semantically search the codebase for function implementations and class logic.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "query": {
+        "type": "string",
+        "description": "Natural language query describing desired functionality"
+      },
+      "top_k": {
+        "type": "integer",
+        "default": 5
+      }
+    },
+    "required": ["query"]
+  }
+}
+```
+
+---
+
+## Engineering Highlights
+
+- **Syntactically Aware Context Windows:** AST-boundary parsing ensures LLMs receive full, uninterrupted functions without broken syntax.
+
+- **Selective Delta Indexing:** Incremental processing ensures memory and compute scale with change diffs, not codebase size.
+
+- **Low Latency Pipeline:** Asynchronous FastAPI backend tuned for real-time developer workflows with 180ms median latency.
+
+- **Rigorous Test Validation:** Automated `pytest` suite testing parser robustness, retrieval accuracy, and vector search edge cases.
+
+---
+
+## Performance & Benchmark Impact
+
+| Metric | Result | Description |
+|---|---|---|
+| **Top-5 Retrieval Accuracy** | 61% → 79% | Improvement evaluated across 30 benchmark queries using AST-boundary chunking |
+| **Re-indexing Runtime** | 70% reduction | Achieved through selective modified-file delta processing |
+| **Median Query Latency** | 180ms | Semantic endpoint retrieval latency |
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Language & Core | Python 3.10+ |
+| Backend & APIs | FastAPI, Uvicorn |
+| RAG & Orchestration | LangChain, Model Context Protocol (MCP) |
+| Vector Database | ChromaDB |
+| Parsing & Analysis | Python AST (`ast` module) |
+| Testing & Quality | pytest |
+| Deployment | Docker, Docker Compose, Linux VPS |
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Python 3.10+
+- Docker
+- Docker Compose
+
+### Quick Start with Docker
+
+```bash
+# Clone the repository
+git clone https://github.com/Harshal-Ahire/Waycode.git
+cd Waycode
+
+# Build and start the service
+docker compose up --build -d
+```
+
+The FastAPI service will be running at:
+
+- **API Base URL:** http://localhost:8000
+- **Interactive API Documentation:** http://localhost:8000/docs
+
+### Run Local Tests
+
+```bash
+# Run the test suite
+pytest tests/ -v
+```
+
+---
+
+## Example Usage
+
+### 1. Index a Repository
+
+```bash
+curl -X POST "http://localhost:8000/api/v1/index" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "repo_path": "./sample_repo",
+    "incremental": true
+  }'
+```
+
+### 2. Perform Semantic Code Search
+
+```bash
+curl -X POST "http://localhost:8000/api/v1/search" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "function that parses AST syntax trees and extracts function definitions",
+    "top_k": 5
+  }'
+```
+
+---
+
+## Project Structure
+
+```text
+Waycode/
+├── app/
+│   ├── main.py                 # FastAPI application & lifespan setup
+│   ├── api/
+│   │   └── routes.py           # REST endpoints (/search, /index, /mcp)
+│   ├── indexing/
+│   │   ├── ast_parser.py       # Python AST syntax tree function extractor
+│   │   └── incremental.py      # Delta modified-file index manager
+│   ├── retrieval/
+│   │   ├── vector_store.py     # ChromaDB vector collection management
+│   │   └── mcp_tools.py        # Model Context Protocol schema bindings
+│   └── config.py               # Environment configuration
+├── tests/
+│   ├── test_ast_parser.py      # AST chunking tests
+│   └── test_retrieval.py       # Benchmark evaluation tests
+├── docker-compose.yml
+├── Dockerfile
+├── requirements.txt
+└── README.md
+```
+
+---
+
+## Roadmap
+
+-Expand AST-based parsing support to additional programming languages.
+-Improve retrieval ranking and evaluation across larger codebases.
+- Enhance MCP integration for more AI coding agents.
+- Add further optimizations for incremental indexing and vector search.
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
